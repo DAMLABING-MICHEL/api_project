@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mon site</title>
+    <link rel="stylesheet" href="../fontawesome-free-6.0.0-beta2-web/css/all.css">
+    <link rel="stylesheet" href="./styles.css">
+    <script src="alpine.min.js" defer></script>
+    <script src="index.js"></script>
+    <style>
+      [x-cloak]{
+        display: none;
+      }
+    </style>
+</head>
+<body class="overflow-x-hidden font-sans">
+    <div class="w-full h-screen" x-data="myData()" x-init="myInit()">
+        <header class="w-full z-40">
+            <div class="w-full p-3 flex lg:h-24 lg:w-full lg:flex-nowrap sm:w-full md:flex-nowrap md:flex-shrink-0 md:h-40 xs:flex-wrap">
+                <div class="w-1/3 lg:w-1/3 xs:w-full h-full flex justify-center items-center">
+                    <div class="w-1/2 lg:w-1/3 md-w-1/3 sm:w-1/3 xs:w-full xs:flex xs:justify-center h-20 text-3xl flex items-center">
+                        <span>logo</span>
+                    </div>
+                </div>
+                <div class="w-2/3 h-full lg:w-1/2 xs:w-full xs:mx-16 px-5 flex justify-center items-center">
+                    <div class="w-full h-8 flex items-center border border-red-700 rounded :transform-none sm:transform-none md:transform scale-125">
+                        <input type="search" placeholder="search..." class="w-full h-full focus:outline-none">
+                        <button type="submit" class="w-12 h-full bg-red-700 border-none text  text-white"><a href="#" class="text-white"><i class="fa fa-search"></i></a></button>
+                        <div class="w-px h-full bg-white"></div>
+                    </div>
+                </div>
+                <div class="w-1/3 :w-1/3 md:w-1/3 sm:w-1/3 xs:w-full xs:justify-center h-full flex justify-center items-center text-3xl">
+                    <span>contact</span>
+                </div>
+            </div>
+            <nav class="w-full transition-all h-12 z-40 bg-red-700 flex items-center justify-center" :class="{'fixed top-0 lg:fixed md:fixed sm:fixed xs:relative transition duration-500 ease-linear transform shadow-lg -translate-y-1 scale-105': fixedNav() }">
+                <div class="w-1/3 h-full"></div>
+                <div class="h-full w-1/3 lg:w-1/3 md:w-1/3 sm:w-1/3 xs:w-full md:hidden uppercase text-white text-xl flex items-center" @click.prevent="openNavigation()">
+                    <span class="ml-16">navigation</span>
+                    <div class="w-10 h-10 mt-8 ml-44 flex-col justify-center items-center cursor-pointer" @click.prevent="openNavigation()">
+                        <div class="w-4 h-px bg-white"></div>
+                        <div class="w-4 h-px bg-white mt-px"></div>
+                        <div class="w-4 h-px bg-white mt-px"></div>
+                        <div class="w-4 h-px bg-white mt-px"></div>
+                        <div class="w-4 h-px bg-white mt-px"></div>
+                    </div>
+                </div>
+                <ul class="list-none capitalize flex w-1/3 lg:w-1/3 md:w-full xs:hidden sm:w-full h-full items-center justify-center lg:flex md:flex sm:hidden">
+                <li><a href="#home" class="text-white text-xl no-underline" :class="{'font-bold':showHome()}" @click="openHome()">home</a></li>
+                <li><a href="#" class="text-white text-xl no-underline ml-10" :class="{'font-bold':showProducts()}" @click="openProducts()">products</a></li>
+                <li><a href="#" class="text-white text-xl no-underline ml-10" :class="{'font-bold':showMaster() }" @click="openMaster()">manage</a></li>
+                </ul>
+                <div class="w-1/3 h-full xs:hidden lg:flex md:flex sm:flex pr-20 flex justify-end items-center text-white">
+                    <a href="#" class="no-underline text-white text-xl"><i class="fa fa-cart-arrow-down" aria-hidden="true"></i></a>
+                    <span class="text  ml-2">(0)</span>
+                </div>
+            </nav>
+        </header>
+        <div class="w-full px-10 top-0 z-40 lg:hidden md:hidden":class="{'fixed mt-12': fixedNav()}" x-show="showNavigation()" @click.away="closeNavigation()">
+            <a href="#" class="w-full bg-white p-2 text-gray-900 uppercase font-semibold flex justify-center border text-sm border-t-0 border-r-0 border-l-0 border-gray-200" :class="{'text-gray-500 font-bold':showHome()}" @click="openHome();openNav = false">home</a>
+            <a href="#" class="w-full bg-white p-2 text-gray-900 uppercase font-semibold flex justify-center border text-sm border-t-0 border-r-0 border-l-0 border-gray-200" :class="{'text-gray-500 font-bold':showHome()}" @click="openProducts();openNav = false">products</a>
+            <a href="#" class="w-full bg-white p-2 text-gray-900 uppercase font-semibold flex justify-center border text-sm border-t-0 border-l-0 border-r-0 border-gray-200" :class="{'text-gray-500 font-bold':showHome()}" @click="openMaster();openNav = false">manage</a>
+        </div>
+        <main @scroll.window = scrollAction()>
+            <div class="w-full flex flex-wrap" x-show="showHome()">
+                <div class="w-full flex animation" style="background-color: rgba(185, 184, 184, 0.5);" @mouseenter="viewButtons()" @mouseout.away="hidButtons()">
+                    <div class="w-1/2  flex items-center justify-center">
+                        <div class="w-1/3 absolute mr-48" x-show="showButtons()">
+                            <button class="text-xl w-10 h-10 border-none rounded" :class="{'transition ease-linear duration-500 transform -translate-y-1 scale-y-105':showButtons() }" style="background-color: rgba(17, 16, 16, 0.5);"><span class="text-white"><i class="fa fa-angle-left"></i></span></button>
+                        </div>
+                        <div class="w-2/3 flex flex-col">
+                            <span class="text-6xl font-bold text-center w-full">product name</span>
+                            <hr class="border border-black w-full">
+                            <span class="text-center text-3xl">description</span>
+                            <div class="flex justify-center mt-5">
+                                <button class="border border-black p-1 px-5 text-xl text-black cursor-pointer">view more</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-1/2 flex items-center">
+                        <div class="w-2/3 flex justify-center">
+                            <img src="../images/phone.png" alt="">
+                        </div>
+                        <div class="w-1/3 absolute flex justify-end ml-48 transition transform ease-in-out" x-show="showButtons()" x-transition:enter="transition ease-out transform">
+                            <button class="text-xl w-10 h-10 border-none rounded" :class="{'transition ease-in duration-500 transform -translate-y-1 scale-y-105':showButtons() }" style="background-color: rgba(17, 16, 16, 0.5);"><span class="text-white"><i class="fa fa-angle-right"></i></span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full md:items-center sm:items-center flex lg:flex-row md:flex-row sm:flex sm:flex-row xs:flex-col">
+                    <div class="w-1/3 h-48 lg:h-48 md:w-4/5 xs:h-48 sm:h-4/5 flex bg-blue-200 md:h-4/5 lg:w-1/3 sm:w-4/5 xs:w-full">
+                        <div class="w-2/3 lg:w-2/3 md:w-1/2 sm:w-3/4 h-full uppercase flex flex-col items-center justify-center">
+                            <div class="w-full flex justify-center text-3xl lg:text-2xl md:text-sm md:font-semibold sm:text-sm sm:font-semibold">
+                                <span>product name</span>
+                            </div>
+                            <div class="w-full flex justify-center text-sm mt-2 mr-5 lg:text-sm md:text-xs md:font-semibold sm:text-xs sm:font-semibold">
+                                <span>product price</span>
+                            </div>
+                            <div class="w-full flex justify-center text-sm mt-5 lg:text-sm md:text-xs sm:text-xs">
+                                <a href="#" class="p-1 w-40 md:w-20 sm:w-20 lg:w-40 border-solid border-t border-b border-l border-r border-black text-center no-underline">view more</a>
+                            </div>
+                        </div>
+                        <div class="w-1/2 md:w-1/2 pt-2 h-full mr-16">
+                            <img src="../images/camera.png" class="w-full h-full mr-5">
+                        </div>
+                    </div>
+                    <div class="w-1/3 h-48 lg:h-48 md:w-4/5 text-white xs:h-48 sm:h-4/5 flex bg-gray-900 md:h-4/5 lg:w-1/3 sm:w-4/5 xs:w-full">
+                        <div class="w-2/3 lg:w-2/3 md:w-1/2 sm:w-3/4 h-full uppercase flex flex-col items-center justify-center">
+                            <div class="w-full flex justify-center text-3xl lg:text-2xl md:text-sm md:font-semibold sm:text-sm sm:font-semibold">
+                                <span>product name</span>
+                            </div>
+                            <div class="w-full flex justify-center text-sm mt-2 mr-5 lg:text-sm md:text-xs md:font-semibold sm:text-xs sm:font-semibold">
+                                <span>product price</span>
+                            </div>
+                            <div class="w-full flex justify-center text-sm mt-5 lg:text-sm md:text-xs sm:text-xs">
+                                <a href="#" class="p-1 w-40 md:w-20 sm:w-20 lg:w-40 border-solid border-t border-b border-l border-r border-white text-center no-underline">view more</a>
+                            </div>
+                        </div>
+                        <div class="w-1/2 md:w-1/2 pt-2 h-full mr-16">
+                            <img src="../images/casque2.png" class="w-full h-full mr-5">
+                        </div>
+                    </div>
+                    <div class="w-1/3 h-48 lg:h-48 md:w-4/5 xs:h-48 sm:h-4/5 flex bg-gray-200 md:h-4/5 lg:w-1/3 sm:w-4/5 xs:w-full">
+                        <div class="w-2/3 lg:w-2/3 md:w-1/2 sm:w-3/4 h-full uppercase flex flex-col items-center justify-center">
+                            <div class="w-full flex justify-center text-3xl lg:text-2xl md:text-sm md:font-semibold sm:text-sm sm:font-semibold">
+                                <span>product name</span>
+                            </div>
+                            <div class="w-full flex justify-center text-sm mt-2 mr-5 lg:text-sm md:text-xs md:font-semibold sm:text-xs sm:font-semibold">
+                                <span>product price</span>
+                            </div>
+                            <div class="w-full flex justify-center text-sm mt-5 lg:text-sm md:text-xs sm:text-xs">
+                                <a href="#" class="p-1 w-40 md:w-20 sm:w-20 lg:w-40 border-solid border-t border-b border-l border-r border-black text-center no-underline">view more</a>
+                            </div>
+                        </div>
+                        <div class="w-1/2 md:w-1/2 pt-2 h-full mr-16">
+                            <img src="../images/tablette.png" class="w-full h-full mr-5">
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full mt-20 ml-10 xs:ml-0 lg:ml-10 md:ml-10 sm:ml-10 flex">
+                    <div class="w-1/4 bg-gray-100 lg:w-1/4 md:w-1/4 sm:w-1/4 xs:w-1/3 h-full">
+                        <!-- <span class="mt-5 ml-20 text-4xl xs:ml-0 lg:ml-20 md:ml-20 sm:ml-20 text-red-500">categories</span> -->
+                        <!-- <select class="w-full h-10 text-4xl mt-12 flex justify-center items-center" name="catego" x-model="activeCategory">
+                            <template x-for="catego in categos" :key="catego.categ_id">
+                                <option :value="catego.categ_id" x-text="catego.libelle" :selected="catego.categ_id === activeCategory"></option>
+                            </template>
+                        </select> -->
+                        <template x-for="catego in categos" :key="catego.categ_id">
+                            <button class="w-full p-2 text-3xl border border-solid font-sans border-gray-300 text-gray-800 uppercase hover:bg-red-600 hover:text-white active:bg-red-600" x-text="catego.libelle" @click.prevent="viewProductsByCategory(catego.categ_id)"></button>
+                        </template>
+                    </div>
+                    <div class="w-4/5 flex flex-wrap pl-5 pr-5 lg:flex sm:flex-wrap p-10">
+                        <div class="w-full h-5 flex">
+                            <div class="w-1/2 h-full flex justify-start">
+                                <button class="w-8 h-8 text-xl border border-gray-500 cursor-pointer" @click.prevent="previous()" :disabled="pageNumber <= 0" :class="{ 'disabled cursor-not-allowed text-gray-500' :pageNumber <= 0 }"><span class="text-gray-500"><i class="fa fa-angle-left text-gray-500"></i></span></button>
+                            </div>
+                            <div class="w-1/2 h-full flex justify-end">
+                                <button class="w-8 h-8 text-xl border border-gray-500 cursor-pointer" @click.prevent="nextPage()" :disabled="pageNumber >= pageCount() -1" :class="{ 'disabled cursor-not-allowed text-gray-600':pageNumber >= pageCount() -1 }"><span class="text-gray-500"><i class="fa fa-angle-right"></i></span></button>
+                            </div>
+                        </div>
+                        <!-- <template x-if="activeCategory"> -->
+                            <template x-for="item in filteredProducts" :key="item.product_id">
+                                <div class="w-1/2 lg:w-1/2 h-40 lg:h-40 lg:p-5 xs:w-full mt-5 bg-white md:w-1/2 md:h-24 md:p-5 sm:p-5 sm:w-full p-5 flex hover:shadow hover:shadow-slate-300 hover:rounded-sm items-center">
+                                    <div class="w-1/3 h-full">
+                                        <img :src="item.image" class="w-full h-full">
+                                    </div>
+                                    <div class="w-64 ml-5 h-full border-gray-600 flex flex-col justify-center">
+                                        <div><a href="#" class="text-gray-900 text  no-underline capitalize" x-text="item.title">tablette</a></div>
+                                        <div class="mt-2 text-gray-500 text " x-text="item.description">mini-description</div>
+                                        <div class="mt-2 text-red-700 font-bold">
+                                            <span  x-text="item.price"></span>
+                                            <span class="uppercase">fcfa</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        <!-- </template> -->
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="w-full h-screen bg-gray-600"  x-show="showMaster()">espace administrateur</div> -->
+            <div class="w-full h-screen pt-20 flex" x-show="showMaster()">
+                <div class="w-64 flex flex-col pl-4">
+                    <div class="w-full p-2 text-xl flex justify-center items-center bg-blue-500 border-solid border-t border-b border-l border-r border-white rounded  cursor-pointer hover:bg-blue-400" @click.prevent="openDash()">
+                        <a href="#" class="no-underline text-white capitalize" @click.prevent="openDash()">dashboard</a>
+                    </div>
+                    <div class="w-full p-2 bg-blue-500 border-solid border-t border-b border-l border-r border-white rounded  flex justify-center items-center text-xl cursor-pointer hover:bg-blue-400" @click.prevent="newProduct()">
+                        <a href="#" class="no-underline text-white capitalize" @click.prevent="newProduct()">add product</a>
+                    </div>
+                    <div class="w-full p-2 bg-green-500 border-solid border-t border-b border-l border-r border-white rounded  flex justify-center items-center text-xl cursor-pointer hover:bg-green-400"  @click.prevent="openProductsList()">
+                        <a href="#" class="no-underline text-white capitalize" @click.prevent="openProductsList()">products list</a>
+                    </div>
+                    <div class="w-full p-2 bg-green-500 border-solid border-t border-b border-l border-r border-white rounded  flex justify-center items-center text-xl cursor-pointer hover:bg-green-400"  @click.prevent="openFilters()">
+                        <a href="#" class="no-underline text-white capitalize">filters</a>
+                        <a href="#" class="text-white textt-xl ml-10" @click.prevent="openFilters()"><i class="fa fa-sort-desc" aria-hidden="true"></i></a>
+                    </div>
+                    <div class="w-64 mt-48 absolute" x-show="showFilters()" @click.away="closeFilters()">
+                        <div class="w-4/5 mt-2 h-full bg-white border-solid border-gray-300 rounded border-t border-b border-l border-r flex flex-col shadow ">
+                            <div class="w-full h-10 hover:bg-gray-200 flex items-center" @click.prevent="newCategory();manageFilters = false">
+                                <a href="#" class="ml-5 no-underline text-black text " @click.prevent="newCategory();manageFilters = false">add category</a>
+                            </div>
+                            <div class="w-full h-10 hover:bg-gray-200 flex items-center" @click.prevent="newBrand();manageFilters = false">
+                                <a href="#" class="ml-5 no-underline text-black text " @click.prevent="newBrand();manageFilters = false">add brand</a>
+                            </div>
+                            <div class="w-full h-10 hover:bg-gray-200 flex items-center" @click.prevent="newTag();manageFilters = false">
+                                <a href="#" class="ml-5 no-underline text-black text " @click.prevent="newTag();manageFilters = false">add tag</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-full p-2 bg-red-700 border-solid border-t border-b border-l border-r border-white rounded  flex justify-center items-center text-xl cursor-pointer hover:bg-red-400">
+                        <a href="index.html" class="no-underline text-white capitalize">logout</a>
+                    </div>
+                </div>
+                <div class="w-full ml-8 mr-20">
+                    <div class="w-full h-40 rounded border-solid border-t border-b border-l border-r shadow  border-gray-600" x-show="showDash()">
+                        <div class="w-full h-20 bg-green-500 capitalize text-4xl flex items-center rounded">
+                        <span class="ml-2">welcome</span>
+                        </div>
+                    </div>
+                    <div class="w-full rounded border-solid border-t border-b border-l border-r shadow  border-gray-600 flex flex-wrap justify-center items-center" x-show="addCategory()">
+                        <div class="w-full bg-green-300 h-20 flex items-center text-3xl capitalize">
+                            <span class="ml-5">product/ <span>add category</span></span>
+                        </div>
+                        <div class="w-full h-full mt-5">
+                            <form method="post" autocomplete="off" class="w-full pt-5 flex justify-center pb-12 bg-gray-200">
+                                <div class="w-2/3 lg:w-2/3 md:w-2/3 sm:w-full h-full">
+                                    <div class="w-4/5 lg:w-4/5 md:w-4/5 sm:w-full p-5 bg-gray-100 border-solid border-b border-t border-l border-r  border-gray-300 rounded">
+                                        <div class="w-full flex flex-wrap capitalize">
+                                            <label for="name">name</label>
+                                            <input type="text" placeholder="category name" x-model="title" class="w-full h-10 capitalize text-sm border focus:outline-none focus:border focus:border-blue-400 border-gray-300 focus:shadow  rounded">
+                                        </div>
+                                        <div class="w-full flex flex-wrap mt-5">
+                                            <label for="price" class="capitalize">description</label>
+                                            <textarea placeholder="write here..." x-model="description" class="w-full h-24 text-sm border focus:outline-none focus:border focus:border-blue-400 border-gray-300 focus:shadow  rounded"></textarea>
+                                        </div>
+                                        <div class="w-full flex mt-10 justify-center">
+                                            <button class="p-3 font-sans border bg-white text  capitalize border-gray-900 cursor-pointer hover:bg-gray-100 rounded flex justify-center items-center">cancel</button>
+                                            <button class="p-3 font-sans bg-green-600 hover:bg-green-700 cursor-pointer text  capitalize border-none text-white rounded ml-5 flex justify-center items-center">add category</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="w-1/2 h-64 p-5 absolute z-40" style="background-color: rgba(17, 16, 16, 0.5);" x-show="viewAddMessage()" @click.away="closeAddMessage()">
+                            <div class="w-full h-full bg-white flex flex-wrap">
+                                <div class=" w-full h-20 flex flex-wrap justify-center">
+                                    <div class="w-full h-10 mt-5 flex justify-center items-center text ">
+                                        <span x-text="addMessage">le produit a été ajouté avec succès &nbsp;<a href="index.html" class="no-underline">ok</a></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="w-full rounded border-solid border-t border-b border-l border-r shadow  border-gray-600 flex flex-wrap justify-center items-center" x-show="addBrand()">
+                        <div class="w-full bg-green-300 h-20 flex items-center text-3xl capitalize">
+                            <span class="ml-5">product/ <span>add brand</span></span>
+                        </div>
+                        <div class="w-full h-full mt-5">
+                            <form method="post" autocomplete="off" class="w-full pt-5 flex justify-center pb-12 bg-gray-200">
+                                <div class="w-2/3 lg:w-2/3 md:w-2/3 sm:w-full h-full">
+                                    <div class="w-4/5 lg:w-4/5 md:w-4/5 sm:w-full p-5 bg-gray-100 border-solid border-b border-t border-l border-r  border-gray-300 rounded">
+                                        <div class="w-full flex flex-wrap capitalize">
+                                            <label for="name">name</label>
+                                            <input type="text" placeholder="brand name" x-model="title" class="w-full h-10 capitalize text-sm border focus:outline-none focus:border focus:border-blue-400 border-gray-300 focus:shadow  rounded">
+                                        </div>
+                                        <div class="w-full flex flex-wrap mt-5">
+                                            <label for="price" class="capitalize">description</label>
+                                            <textarea placeholder="write here..." x-model="description" class="w-full h-24 text-sm border focus:outline-none focus:border focus:border-blue-400 border-gray-300 focus:shadow  rounded"></textarea>
+                                        </div>
+                                        <div class="w-full flex mt-10 justify-center">
+                                            <button class="p-3 font-sans border bg-white text  capitalize border-gray-900 cursor-pointer hover:bg-gray-100 rounded flex justify-center items-center">cancel</button>
+                                            <button class="p-3 font-sans bg-green-600 hover:bg-green-700 cursor-pointer text  capitalize border-none text-white rounded ml-5 flex justify-center items-center">add brand</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="w-1/2 h-64 p-5 absolute z-40" style="background-color: rgba(17, 16, 16, 0.5);" x-show="viewAddMessage()" @click.away="closeAddMessage()">
+                            <div class="w-full h-full bg-white flex flex-wrap">
+                                <div class=" w-full h-20 flex flex-wrap justify-center">
+                                    <div class="w-full h-10 mt-5 flex justify-center items-center text ">
+                                        <span x-text="addMessage">le produit a été ajouté avec succès &nbsp;<a href="index.html" class="no-underline">ok</a></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="w-full rounded border-solid border-t border-b border-l border-r shadow  border-gray-600 flex flex-wrap justify-center items-center" x-show="addTag()">
+                        <div class="w-full bg-green-300 h-20 flex items-center text-3xl capitalize">
+                            <span class="ml-5">product/ <span>add tag</span></span>
+                        </div>
+                        <div class="w-full h-full mt-5">
+                            <form method="post" autocomplete="off" class="w-full pt-5 flex :flex-nowrap sm:flex sm:flex-wrap justify-center pb-12 bg-gray-200">
+                                <div class="w-2/3 lg:w-2/3 md:w-2/3 sm:w-full h-full">
+                                    <div class="w-4/5 lg:w-4/5 md:w-4/5 sm:w-full p-5 bg-gray-100 border-solid border-b border-t border-l border-r  border-gray-300 rounded">
+                                        <div class="w-full flex flex-wrap capitalize">
+                                            <label for="name">name</label>
+                                            <input type="text" placeholder="tag name" x-model="title" class="w-full h-10 capitalize text-sm border focus:outline-none focus:border focus:border-blue-400 border-gray-300 focus:shadow  rounded">
+                                        </div>
+                                        <div class="w-full flex flex-wrap mt-5">
+                                            <label for="price" class="capitalize">description</label>
+                                            <textarea placeholder="write here..." x-model="description" class="w-full h-24 text-sm border focus:outline-none focus:border focus:border-blue-400 border-gray-300 focus:shadow  rounded"></textarea>
+                                        </div>
+                                        <div class="w-full flex mt-10 justify-center">
+                                            <button class="p-3 font-sans border bg-white text  capitalize border-gray-900 cursor-pointer hover:bg-gray-100 rounded flex justify-center items-center">cancel</button>
+                                            <button class="p-3 font-sans bg-green-600 hover:bg-green-700 cursor-pointer text  capitalize border-none text-white rounded ml-5 flex justify-center items-center">add tag</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="w-1/2 h-64 p-5 absolute z-40" style="background-color: rgba(17, 16, 16, 0.5);" x-show="viewAddMessage()" @click.away="closeAddMessage()">
+                            <div class="w-full h-full bg-white flex flex-wrap">
+                                <div class=" w-full h-20 flex flex-wrap justify-center">
+                                    <div class="w-full h-10 mt-5 flex justify-center items-center text ">
+                                        <span x-text="addMessage">le produit a été ajouté avec succès &nbsp;<a href="index.html" class="no-underline">ok</a></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="w-full lg:mb-96 rounded border-solid border-t border-b border-l border-r shadow  border-gray-600 flex flex-wrap justify-center items-center" x-show="addProduct()">
+                        <div class="w-full bg-green-300 h-20 flex items-center text-3xl capitalize">
+                            <span class="ml-5">product/ <span>add product</span></span>
+                        </div>
+                        <div class="w-full h-full mt-5">
+                            <form autocomplete="off" class="w-full pt-5 flex lg:flex-nowrap md:flex-nowrap sm:flex-wrap pb-12 bg-gray-200">
+                                <div class="w-1/2 h-full lg:w-1/2 md:w-1/2 sm:bg-green sm:w-full">
+                                    <div class="w-full p-5 ml-10 :ml-10 md:ml-10 sm:ml-0 bg-gray-100 border-solid border-b border-t border-l border-r  border-gray-300 rounded">
+                                        <div class="w-full flex flex-wrap capitalize">
+                                            <label for="name">name</label>
+                                            <input type="text" placeholder="product name" x-model="title" class="w-full h-10 capitalize text-sm border focus:outline-none focus:border focus:border-blue-400 border-gray-300 focus:shadow  rounded">
+                                        </div>
+                                        <div class="w-full flex flex-wrap mt-5 capitalize">
+                                            <label for="price">price</label>
+                                            <input type="number" placeholder="product price" x-model="price" class="w-full h-10 capitalize text-sm border focus:outline-none focus:border focus:border-blue-400  border-gray-300 focus:shadow  rounded">
+                                        </div>
+                                        <div class="w-full flex flex-wrap mt-5">
+                                            <label for="price" class="capitalize">description</label>
+                                            <textarea placeholder="write here..." x-model="description" class="w-full h-24 text-sm border focus:outline-none focus:border focus:border-blue-400 border-gray-300 focus:shadow  rounded"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="w-full ml-10 sm:ml-0  :ml-10 md:ml-10 p-5 mt-5 bg-gray-100 text-sm border-solid border-b border-t border-l border-r border-gray-300 rounded">
+                                        <div class="w-full flex flex-wrap text  mt-5">
+                                            <label for="price">add image</label>
+                                            <div class="w-full p-2 border border-gray-300  mt-1 border-solid rounded">
+                                                <input type="file" x-model="image" class="w-full h-full">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="w-1/3 lg:w-1/3 md:w-1/3 sm:w-full h-full ml-20 lg:ml-20 md:ml-20 sm:ml-0 lg:mt-0 md:mt-0 sm:mt-5">
+                                    <div class="w-full p-5 bg-gray-100 border-solid border-b border-t border-l border-r border-gray-300 rounded">
+                                        <div class="w-full flex flex-wrap">
+                                            <label for="category" class="capitalize">category</label>
+                                            <input type="text"  x-model="categorySearch" placeholder="computer,phone" :value="categoryId" class="w-full h-10 capitalize text-sm border border-gray-300 focus:outline-none focus:border focus:border-blue-400 focus:shadow  rounded" @click="openSelectCategory()">
+                                            <input type="hidden">
+                                            <span x-text="categorySearch"></span>
+                                            <!-- <label for="price" class="capitalize">category</label>
+                                            <select  name="" x-model="category" class="w-full h-10 text  border focus:outline-none focus:border focus:border-blue-400 border-gray-300 focus:shadow  rounded">
+                                                <template x-for="catego in categos" :key="catego.categ_id">
+                                                    <option class="text-xl capitalize" :value="catego.categ_id" x-text="catego.libelle">category</option>
+                                                </template>
+                                            </select> -->
+                                        </div>
+                                        <div class="w-1/5 px-5 mt-px pb-5 bg-white absolute border-solid shadow  border-t border-b border-l border-r border-gray-300 rounded" x-show="showSelectCategory()" @click.away="closeSelectCategory()">
+                                            <template x-for="catego in filtredCategos" :key="catego.categ_id">
+                                                <div class="w-full flex items-center cursor-pointer p-1 rounded-full mt-1" @click.prevent="categorySearch = catego.libelle;categoryId = catego.categ_id ;seeVal();selectCateg = false">
+                                                    <span x-text="catego.libelle"></span>
+                                                </div>
+                                            </template>
+                                        </div>
+                                        <div class="w-full flex flex-wrap mt-5">
+                                            <label for="brand" class="capitalize">brand</label>
+                                            <input type="text" x-model="brandSearch" :value="brandId" placeholder="dell,hp,techno" class="w-full h-10 capitalize text-sm border border-gray-300 focus:outline-none focus:border focus:border-blue-400 focus:shadow  rounded" @click="openSelectBrand()">
+                                        </div>
+                                        <span x-text="brandSearch"></span>
+                                        <div class="w-1/5 px-5 mt-px pb-5 bg-white absolute border-solid shadow  border-t border-b border-l border-r border-gray-300 rounded" x-show="showSelectBrand()" @click.away="closeSelectBrand()">
+                                            <template x-for="brand in filtredBrands" :key="brand.brand_id">
+                                                <div class="w-full flex items-center cursor-pointer p-1 rounded-full mt-1" @click.prevent="brandSearch = brand.brand_name;brandId = brand.brand_id;seeVal();selectBrand = false">
+                                                    <span x-text="brand.brand_name"></span>
+                                                </div>
+                                            </template>
+                                        </div>
+                                        <div class="w-full flex flex-wrap mt-5">
+                                            <label for="tag" class="capitalize">tags</label>
+                                            <!-- <input x-model="tagSearch" class="w-full h-10 capitalize text-sm border border-gray-300 cursor-pointer rounded" @click.prevent="openSelectTag()"> -->
+                                            <div class="w-full h-10 overflow-auto capitalize text-sm border border-gray-300 rounded flex items-center" @click.prevent="openSelectTag()">
+                                                <input type="text" class="w-full h-10 capitalize text-sm border border-gray-300 rounded outline-none" placeholder="select tags" x-show="tagSearch.length == 0">
+                                                <template x-for="tg in tagSearch" :key="tagValue">
+                                                    <div class="rounded-full border border-teal-400 bg-teal-100 flex items-center">
+                                                        <span x-text="tg"></span>
+                                                        <a href="#" class="text-lg text-teal-900 font-bold" @click.prevent="removeTag(tg)">&times;</a>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </div>
+                                        <div class="w-1/5 mt-px pb-5 bg-white absolute border-solid shadow  border-t border-b border-l border-r border-gray-300 rounded" x-show="showSelectTag()" @click.away="closeSelectTag()">
+                                            <input type="search" x-model="searchTag" :value="tagValue" class="w-full h-10 capitalize text-sm border border-gray-300 focus:outline-none focus:border focus:border-blue-400 focus:shadow  rounded">
+                                            <template x-for="tag in filtredTags" :key="tag.tag_id">
+                                                <!-- <div class="w-full flex items-center cursor-pointer p-1 rounded-full mt-1" @click.prevent="tagSearch = tag.tag_name;selectTag = false">
+                                                    <span x-text="tag.tag_name"></span>
+                                                </div> -->
+                                                <div class="w-full flex items-center cursor-pointer p-1 rounded-full mt-1" @click.prevent="searchTag = tag.tag_name;getSelectedTags(tag.tag_id)">
+                                                    <span x-text="tag.tag_name"></span>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </div>
+                                    <div class="w-full mt-10 flex justify-center">
+                                        <button class="p-3 font-sans border bg-white text  capitalize border-gray-900 cursor-pointer hover:bg-gray-100 rounded flex justify-center items-center">cancel</button>
+                                        <button class="p-3 font-sans bg-green-600 hover:bg-green-700 cursor-pointer text  capitalize border-none text-white rounded ml-5 flex justify-center items-center" @click.prevent="postProduct()">add product</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="w-1/2 h-64 p-5 absolute z-40" style="background-color: rgba(17, 16, 16, 0.5);" x-show="viewAddMessage()" @click.away="closeAddMessage()">
+                            <div class="w-full h-full bg-white flex flex-wrap">
+                                <div class=" w-full h-20 flex flex-wrap justify-center">
+                                    <div class="w-full h-10 mt-5 flex justify-center items-center text ">
+                                        <span x-text="addMessage">le produit a été ajouté avec succès &nbsp;<a href="index.html" class="no-underline">ok</a></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-full p-2 rounded border-none shadow  border-gray-600 flex flex-wrap justify-center items-center" x-show="showProductsList()">
+                        <div class="w-full h-20 bg-green-500 capitalize text-4xl flex items-center rounded">
+                            <span class="ml-2">products list/page<span x-text="pageNumber+1"> </span></span>
+                        </div>
+                        <div class="w-full mt-5">
+                            <table class="min-w-full leading-normal">
+                                <thead>
+                                    <tr>
+                                        <th
+                                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider text-xl">
+                                            image
+                                        </th>
+                                        <th
+                                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider text-xl">
+                                            name
+                                        </th>
+                                        <th
+                                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider text-xl">
+                                            price
+                                        </th>
+                                        <th
+                                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                            <button class="w-20 h-8 text-white bg-blue-700 hover:bg-blue-600 cursor-pointer p-1 border-none rounded" @click="newProduct()">add new</button>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template x-for="item in filteredProducts" :key="item">
+                                        <tr>
+                                            <td class="border-b border-gray-200 bg-white text-sm">
+                                                <div class="flex items-center">
+                                                    <div class="flex-shrink-0 w-20 h-20">
+                                                        <img class="w-full h-full rounded-full" :src="item.image"/>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="border-b border-gray-200 bg-white text-sm">
+                                                <p class="text-gray-900 whitespace-no-wrap ml-5 text-xl" x-text="item.title">product name</p>
+                                            </td>
+                                            <td class="border-b border-gray-200 bg-white text-sm">
+                                                <p class="text-gray-900 whitespace-no-wrap ml-5 text-xl" x-text="item.price">
+                                                    product price
+                                                </p>
+                                            </td>
+                                            <td class="border-b border-gray-200 bg-white text-sm">
+                                                <p class="text-gray-900 whitespace-no-wrap">
+                                                    <button class=" w-16 h-8 ml-6 text-white bg-green-700 hover:bg-green-600 cursor-pointer p-1 border-none rounded" @click.prevent="deleteProduct(item.product_id)">delete</button>
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- <div class="w-1/2 h-64 p-5 absolute z-40" style="background-color: rgba(17, 16, 16, 0.5);" x-show="showDeleteModal()" @click.away="closeDeleteModal()">
+                            <div class="w-full h-full bg-white flex flex-wrap">
+                                <div class=" w-full h-20 flex flex-wrap justify-center">
+                                    <div class="w-full h-10 mt-5 flex justify-center items-center text " x-show="viewMessage()">
+                                        <span x-text="message">suppression reussie</span> &nbsp; <a href="index.html">ok</a>
+                                    </div>
+                                    <p :class="{'hidden': viewMessage()}">
+                                        <span class="text ">supprimer le produit?</span>&nbsp;<a href="#" class="no-underline text  text-red-500" @click.prevent="deleteProduct(value)">oui</a>&nbsp;<a href="#" class="no-underline text " @click.prevent="closeDeleteModal()">retour</a>
+                                    </p>
+                                </div> 
+                                <span x-text="value"></span>
+                            </div>
+                        </div> -->
+                    </div>
+                    <div class="mt-10 flex justify-center">
+                        <div  x-show="showProductsList()">
+                            <button class="px-2 py-1 ml-5 text-xl rounded text-blue-500 border-none" @click.prevent="viewPage(0)" :disabled="pageNumber <= 0" :class="{ 'disabled cursor-not-allowed text-gray-600' : pageNumber <= 0 }">|<</button>
+                            <button class="px-2 py-1 ml-5 text-xl rounded text-blue-500 border-none" @click.prevent="previous()" :disabled="pageNumber <= 0" :class="{ 'disabled cursor-not-allowed text-gray-600' : pageNumber <= 0 }">
+                            <</button>
+                                <!-- Display page numbers -->
+                                <template x-for="(page,index) in pages()" :key="index">
+                                    <button
+                                    class="px-3 py-2 ml-5 rounded border-none"
+                                    :class="{ 'bg-indigo-600 text-white font-bold' : index === pageNumber }"
+                                    type="button"
+                                    x-on:click="viewPage(index)"
+                                    >
+                                    <span x-text="index+1"></span>
+                                    </button>
+                                </template>
+                                <button class="px-2 py-1 ml-5 text-xl rounded text-blue-500 border-none" @click.prevent="nextPage()" :disabled="pageNumber >= pageCount() -1" :class="{ 'disabled cursor-not-allowed text-gray-600' :pageNumber >= pageCount() -1 }">></button>
+                                <button class="px-2 py-1 ml-5 text-xl rounded text-blue-500 border-none"  @click.prevent="viewPage(Math.ceil(total/numberOfItems)-1)" :disabled="pageNumber >= Math.ceil(total/numberOfItems)-1" :class="{ 'disabled cursor-not-allowed text-gray-600' :pageNumber >= pageCount() -1 }">>|</button>
+                            </div>
+                    </div>
+                    <div class="w-full mt-20 flex items-center" x-show="showProductsList()">
+                        <div class="w-full sm:w-auto text-center sm:text-left" x-show="pageCount() > 1">
+                            Page <span x-text="pageNumber+1"> </span> of
+                            <span x-text="pageCount()"></span> | Showing
+                            <span x-text="startResults()"></span> to
+                            <span x-text="endResults()"></span>
+                        </div>
+                        total result
+                        <div class="w-full sm:w-auto text-center sm:text-right ml-auto" x-show="total > 0">
+                            Total <span class="font-bold" x-text="total"></span> results
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <section class="w-full capitalize font-sans flex flex-wrap justify-center items-center" x-show="showProducts()">
+                <div class="w-full h-24 flex flex-col justify-center items-center" style="background-color: rgba(185, 184, 184, 0.5);">
+                    <span class="text-2xl uppercase font-bold sm:hidden lg:inline-flex md:inline-flex">active filter</span>
+                    <div class="mt-2 sm:hidden lg:inline-flex md:inline-flex">
+                        <a href="#" class="no-underline uppercase text-xs text-gray-800" @click.prevent="openHome()">home</a>
+                        <span class="uppercase text-xs">/</span>
+                        <a href="#" class="no-underline uppercase text-xs text-gray-800" @click.prevent="viewAllProducts()">all products</a>
+                    </div>
+                </div>
+                <div class="w-full flex lg:flex-nowrap md:flex-nowrap md:flex-row sm:flex-wrap xs:flex-wrap">
+                    <div class="w-full lg:hidden md:hidden p-5 mt-8 ml-10 flex justify-center">
+                        <a href="#">filter</a>
+                    </div>
+                    <div class="w-1/3 ml-10 lg:w-1/3 md:w-1/3 sm:w-full flex flex-col lg:flex md:flex sm:hidden">
+                        <div class="w-full flex flex-col">
+                            <span class="text-xl uppercase font-semibold">trends</span>
+                            <div class="mt-5">
+                                <a href="#" class="no-underline" @click.prevent="viewTopsProducts()">tops</a><hr>
+                            </div>
+                            <div>
+                                <a href="#" class="no-underline"><span>recents</span></a><hr>
+                            </div>
+                        </div>   
+                        <div class="w-full flex flex-col">
+                            <span class="text-xl mt-10 text-gray-600 uppercase">filter by</span>
+                            <!-- <button type="button" class="w-24 mt-5 bg-gray-200 hover:bg-gray-400 border-solid hover:border-solid cursor-pointer"><a href="#" class="no-underline mr-5 text-sm"><span class="text ">&times;</span>clear all</a></button> -->
+                        </div>
+                        <div class="w-full mt-5">
+                            <span class="text-xl font-semibold">categories</span>
+                            <template x-for="catego in categos" :key="catego.categ_id">
+                                <div>
+                                    <input type="checkbox" x-model=checkCateg :value="catego.categ_id" class="text-xl"><span x-text="catego.libelle"></span>
+                                </div>
+                            </template>
+                            <div class="w-full mt-10">
+                                <span class="text-xl mt-10 font-semibold">brand</span>
+                                <template x-for="brand in brands" :key="brand.brand_id">
+                                    <div>
+                                        <input type="checkbox" :value="brand.brand_id" x-model="checkBrand" class="text-xl"><span x-text="brand.brand_name">dell</span>
+                                    </div>
+                                </template>
+                            </div>
+                            <div class="w-full mt-10">
+                                <span class="text-2xl font-semibold">tags</span>
+                                <template x-for="tag in tags" :key="tag.tag_id">
+                                    <div>
+                                        <input type="checkbox" name="checkTag" :value="tag.tag_id" x-model="checkTag"><span x-text="tag.tag_name">dekstop</span>
+                                    </div>
+                                </template>
+                            </div>
+                            <button class="mt-5 px-5 p-1 bg-blue-700 text-lg text-white capitalize" @click.prevent="filterProducts(checkCateg,checkBrand,checkTag)">filter</button>
+                        </div>
+                    </div>
+                    <div class="w-full flex flex-wrap ml-5 mr-10">
+                        <div class="w-full h-64 lg:flex lg:flex-col md:flex-col md:flex sm:hidden xs:hidden">
+                            <span class="ml-5 text-2xl">tops products</span>
+                            <div class="ml-5">
+                                <span>tops products informations</span>
+                            </div>
+                        </div>
+                        <div class="w-full h-10 ml-5 bg-gray-100 flex lg:flex md:flex sm:hidden xs:hidden items-center" style="background-color: rgba(185, 184, 184, 0.5);">
+                            <span class="ml-5">there are <span class="font-semi-bold" x-text="products.length"></span> products</span>
+                        </div>
+                        <div class="w-full h-12 ml-5 mt-5 bg-gray-100 flex items-center" style="background-color: rgba(144, 143, 143, 0.5);" x-show="activeFilter">
+                            <span class="ml-5 capitalize font-semibold text ">active filters</span>
+                            <div class="bg-white ml-5 text-sm">
+                                <span>choice goes here</span>
+                                <a href="#" class="text  no-underline">&times;</a>
+                            </div>
+                        </div>
+                        <div x-show="showAllProducts()" class="w-full ml-5 flex flex-wrap" :class="{ 'hidden': showDropFilter() }">
+                            <template x-for="prod in allProducts" :key="prod.product_id">
+                                <!-- <div class="w-1/3 lg:w-1/3 md:w-1/3 sm:w-1/3 xs:w-4/5 ml-2 mt-5 pb-5 sm:pb-12 px-10 pt-10 border border-gray-300 hover:shadow hover:rounded"></div> -->
+                                <div class="w-72 lg:w-72 xs:w-96 sm:w-48 md:w-64 sm:pb-10 md:pb-3 lg:pb-3 ml-2 py-3 px-3 mt-3 border border-gray-300 shadow-lg hover:shadow-lg">
+                                    <div class="w-full h-12 flex justify-center text-xl">
+                                        <span x-text="prod.title">product name</span>
+                                    </div>
+                                    <div class="w-full h-64">
+                                        <img :src="prod.image" class="w-full h-full">
+                                    </div>
+                                    <div class="w-full h-24 flex justify-center flex-wrap">
+                                        <span class="text-red-500 font-bold text-xl" x-text="prod.price">product price</span>&nbsp;<span class="uppercase text-xl text-red-500">fcfa</span>
+                                        <div class="w-full mb-5 h-16 sm:pb-20 lg:pb-0 md:pb-0 lg:h-16 md:h-16 mt-3 flex lg:flex-nowrap md:flex-nowrap sm:flex-wrap justify-center items-center">
+                                            <div class="p-3 flex justify-center sm:justify-center bg-red-600 uppercase text-white" @click.prevent="openCartModal(prod.product_id)">
+                                                <a href="#" class="no-underline text-white">add to cart</a>
+                                            </div>
+                                            <div class="w-12 h-8 border-solid ml-2 flex justify-center items-center text-xl border-l border-r border-t border-b border-red-600 p-1 text-red-500">
+                                                <a href="#" class="no-underline text-red-500" @click.prevent="viewProductInfos(prod.product_id)">view</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                            <div class="top-0 bottom-0 left-0 right-0 fixed z-40 p-20 flex justify-center items-center" style="background-color: rgba(0, 0, 0, 0.6);" x-show="viewCartModal()" @click.prevent="closeCartModal()">
+                                <div class="w-3/4 h-full bg-white flex flex-wrap">
+                                    <div class="w-full h-10 flex justify-end items-center text-2xl">
+                                        <button class="mr-2 text-gray-900" @click.prevent="closeCartModal()">&times;</button>
+                                    </div>
+                                    <div class="w-full h-full bg-red-900">
+                                        <span x-text="cartMessage"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="w-full mt-5 flex justify-center">
+                                <button @click.prevent="nextView()" class="p-2 bg-blue-600 border-none text  text-white rounded hover:bg-blue-500" :hidden="hideNextButton">voir plus</button>
+                                <button @click.prevent="previousView()" class="p-2 bg-blue-600 border-none text  text-white rounded hover:bg-blue-500" :hidden="hidePreviousButton">moins</button>
+                            </div>
+                        </div>
+                        <div class="w-full" x-show="showTopsProducts()">
+                            <span class="ml-5">tops products goes here</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <div class="top-0 bottom-0 left-0 right-0 fixed p-20 z-40 flex justify-center items-center" x-show="productInfos()" style="background-color: rgba(14, 12, 12, 0.5);">
+                <template x-for="oneProd in product" :key="oneProd.product_id">
+                    <div class="w-3/4 h-full bg-white flex flex-wrap" @click.away="closeInfosModal()">
+                        <div class="w-full h-5 flex justify-end items-center text-gray-300">
+                            <button class="text-2xl mr-2" @click.prevent="closeInfosModal()">&times;</button>
+                        </div>
+                        <div class="w-full flex mt-0">
+                            <div class="w-1/2 h-full flex">
+                                <div class="w-2/3">
+                                    <img :src="oneProd.image" class="w-full mt-5" x-show="activeImage === 'image'">
+                                    <img src="../images/phone.png" class="w-full h-full" x-show="activeImage === 'phone'">
+                                    <img src="../images/camera.png" class="w-full h-full" x-show="activeImage === 'camera'">
+                                    <img src="../images/laptop.png" class="w-full h-full" x-show="activeImage === 'laptop'">
+                                </div>
+                                <div class="w-1/4 flex flex-col items-center">
+                                    <div class="w-1/2 h-16 flex justify-center items-center p-2 border-solid border-t border-b border-l border-r" @click.prevent="activeImage = 'image'" :class="{'border-red-700': activeImage === 'image'}">
+                                        <img :src="oneProd.image"class="w-full h-full">
+                                    </div>
+                                    <div class="w-1/2 h-16 flex justify-center items-center p-2 border-solid border-t border-b border-l border-r mt-5" @click.prevent="activeImage = 'phone'" :class="{'border-red-700': activeImage === 'phone'}">
+                                        <img src="../images/phone.png" class="w-full h-full">
+                                    </div>
+                                    <div class="w-1/2 h-16 flex justify-center items-center p-2 border-solid border-t border-b border-l border-r mt-5" @click.prevent="activeImage = 'camera'" :class="{'border-red-700': activeImage === 'camera'}">
+                                        <img src="../images/camera.png" class="w-full h-full">
+                                    </div>
+                                    <div class="w-1/2 h-16 flex justify-center items-center p-2 border-solid border-t border-b border-l border-r mt-5" @click.prevent="activeImage = 'laptop'" :class="{'border-red-700': activeImage === 'laptop'}">
+                                        <img src="../images/laptop.png" class="w-full h-full">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="w-1/2">
+                                <div class="w-full flex flex-col">
+                                    <span class="text-black uppercase" x-text="oneProd.title"><h3>product name</h3></span>
+                                    <div class=" mt-5">
+                                        <span class="text-red-700 text-xl" x-text="oneProd.price">product price</span> <span class="uppercase text-red-700">fcfa</span>
+                                    </div>
+                                    <span class="text-gray-500 text-xl mt-5" x-text=oneProd.description>product description</span>
+                                </div>
+                                <div class="w-full text-xl">
+                                    <div class="flex items-center">
+                                        <span class="h-full">size</span>
+                                        <div class="w-16 h-10 ml-5 flex items-center">
+                                            <span>select</span>
+                                        </div>
+                                    </div>
+                                    <div class="w-full h-10 mt-5 flex">
+                                        <span>colors</span>
+                                        <div class="w-5 h-5 bg-green-300 ml-2"></div>
+                                        <div class="w-5 h-5 bg-yellow-300 ml-5"></div>
+                                    </div>
+                                    <div class="w-full h-12 mt-5 flex">
+                                        <span>quantity</span>
+                                        <div class="w-20 h-10 ml-2 flex">
+                                            <div class="w-12 h-full border-solid border-b border-l border-r border-t border-gray-600 flex justify-center items-center">1</div>
+                                            <div class="w-8 h-full ml-2">
+                                                <div class="w-full h-5 border-solid border-b border-l border-r border-t border-gray-600"></div>
+                                                <div class="w-full h-5  border-solid border-b border-l border-r border-t border-gray-600"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="w-full flex">
+                                    <div class="w-40 h-10 bg-red-500 flex justify-center uppercase text-white items-center">
+                                        <span>add to cart</span>
+                                    </div>
+                                    <div class="w-20 h-10  ml-2 flex items-center">
+                                        <span class="text-green-500 text-xl">&check;</span>
+                                        <span class="capitalize ml-2 text-gray-700">in stock</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </main>
+        <!-- footer -->
+        <footer class="w-full bg-gray-900 justify-center items-center flex text-xl text-white pt-5 pb-5 mt-40 mb-20 sm:hidden xl:flex md:hidden :hidden">
+            <div class="w-full flex flex-wrap">
+                <div class="w-full  flex justify-end pr-20 hover:text-white" x-show=" fixedNav()">
+                    <button  id="home" class="w-12 h-12 p-5 fixed bg-white text-red-700 bottom-0 right-0 mr-8 mb-8 z-10 flex justify-center items-center text-xl border-solid border  border-red-700 shadow  hover:bg-red-800 cursor-pointer hover:text-white"><a href="#" class=" text-sm"><i class="fa fa-chevron-up" aria-hidden="true"></i></a></button>
+                </div>
+                <div class="w-full flex justify-center">
+                    ©2021 dms. All rights reserved.
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
